@@ -30,7 +30,7 @@ if [[ "$1" == "mattermost" ]]; then
   
   echo "Starting platform"
   cd ${MM_HOME}
-  ./bin/platform $*
+  ./bin/platform
 fi
 
 exec "$@"
