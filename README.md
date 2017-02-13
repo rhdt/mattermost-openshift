@@ -2,7 +2,7 @@ Set of configurations to run Mattermost Team on Openshift
 
 ## Building the image
 
-    make build
+    make build IMAGE=mattermost-team VERSION=3.6.2
 
 ## Running the image
 
