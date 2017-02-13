@@ -1,5 +1,7 @@
 FROM centos/centos:7
 
+MAINTAINER Jean-Francois Chevrette <jfchevrette@gmail.com>
+
 # Labels consumed by the build service
 LABEL Component="mattermost" \
       Name="mattermost/mattermost-team-3.6.2-centos7" \
