@@ -1,0 +1,187 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: mattermost
+  annotations:
+    openshift.io/display-name: "Mattermost Team (Opensource)"
+    description: "Template to provision a Mattermost Team instance."
+    iconClass: "icon-bubbles"
+    tags: "instant-app,mattermost,slack"
+objects:
+- kind: Route
+  apiVersion: v1
+  metadata:
+    name: "${MATTERMOST_SERVICE_NAME}"
+  spec:
+    host: "${MATTERMOST_FQDN}"
+    to:
+      kind: Service
+      name: "${MATTERMOST_SERVICE_NAME}"
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+- kind: PersistentVolumeClaim
+  apiVersion: v1
+  metadata:
+    name: "${MATTERMOST_SERVICE_NAME}-config"
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: "1Gi"
+- kind: PersistentVolumeClaim
+  apiVersion: v1
+  metadata:
+    name: "${MATTERMOST_SERVICE_NAME}-logs"
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: "1Gi"
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: "${MATTERMOST_SERVICE_NAME}"
+  spec:
+    ports:
+    - name: mattermost
+      port: 8065
+      targetPort: 8065
+      protocol: TCP
+    selector:
+      name: "${MATTERMOST_SERVICE_NAME}"
+    type: ClusterIP
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: "${MATTERMOST_SERVICE_NAME}"
+  stringData:
+    mm-db-host: "${MM_DB_HOST}"
+    mm-db-port: "${MM_DB_PORT}"
+    mm-db-user: "${MM_DB_USER}"
+    mm-db-pass: "${MM_DB_PASS}"
+    mm-db-name: "${MM_DB_NAME}"
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: "${MATTERMOST_SERVICE_NAME}"
+  spec:
+    strategy:
+      type: Recreate
+    triggers:
+    - type: ConfigChange
+    replicas: 1
+    selector:
+      name: "${MATTERMOST_SERVICE_NAME}"
+    template:
+      metadata:
+        labels:
+          name: "${MATTERMOST_SERVICE_NAME}"
+      spec:
+        containers:
+        - name: mattermost
+          image: "${MATTERMOST_IMAGE}"
+          ports:
+          - containerPort: 8065
+            protocol: TCP
+          env:
+          - name: MM_DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: "${MATTERMOST_SERVICE_NAME}"
+                key: mm-db-host
+          - name: MM_DB_PORT
+            valueFrom:
+              secretKeyRef:
+                name: "${MATTERMOST_SERVICE_NAME}"
+                key: mm-db-port
+          - name: MM_DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: "${MATTERMOST_SERVICE_NAME}"
+                key: mm-db-user
+          - name: MM_DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: "${MATTERMOST_SERVICE_NAME}"
+                key: mm-db-pass
+          - name: MM_DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: "${MATTERMOST_SERVICE_NAME}"
+                key: mm-db-name
+          volumeMounts:
+          - name: mattermost-config
+            mountPath: "/mattermost/config"
+            readOnly: false
+          - name: mattermost-logs
+            mountPath: "/mattermost/logs"
+            readOnly: false
+          te#- rminationMessagePath: "/dev/termination-log"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8065
+              scheme: HTTP
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8065
+              scheme: HTTP
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+        volumes:
+        - name: mattermost-config
+          persistentVolumeClaim:
+            claimName: "${MATTERMOST_SERVICE_NAME}-config"
+        - name: mattermost-logs
+          persistentVolumeClaim:
+            claimName: "${MATTERMOST_SERVICE_NAME}-logs"
+        restartPolicy: Always
+        dnsPolicy: ClusterFirst
+
+parameters:
+- name: MATTERMOST_SERVICE_NAME
+  displayName: Mattermost Service Name
+  description: The name of the Openshift Services exposed for the Mattermost app
+  value: "mattermost"
+  required: true
+- name: MATTERMOST_FQDN
+  displayName: Mattermost public domain name
+  description: The domain name where Mattermost will be hosted at
+  required: true
+- name: MATTERMOST_IMAGE
+  displayName: Mattermost docker image
+  description: The Mattermost docker image
+  value: "registry.centos.org/jfchevrette/mattermost-team:3.6.2"
+  required: true
+- name: MM_DB_HOST
+  displayName: Mattermost database host
+  description: Hostname/IP of the Postgres database that Mattermost will connect to
+  required: true
+- name: MM_DB_PORT
+  displayName: Mattermost database port
+  value: "5432"
+  required: true
+- name: MM_DB_USER
+  displayName: Mattermost database user
+  value: "mmuser"
+  required: true
+- name: MM_DB_PASS
+  displayName: Mattermost database password
+  value: "mmuser_password"
+  required: true
+- name: MM_DB_NAME
+  displayName: Mattermost database name
+  value: "mattermost"
+  required: true
