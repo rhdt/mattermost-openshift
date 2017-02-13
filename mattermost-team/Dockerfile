@@ -1,5 +1,12 @@
 FROM registry.centos.org/centos/centos:7
 
+# Labels consumed by the build service
+LABEL Component="mattermost" \
+      Name="mattermost/mattermost-team-3.6.2-centos7" \
+      Version="3.6.2" \
+      Release="1"
+
+# Openshift/Kubernetes labels
 LABEL io.k8s.description="Mattermost is an open source, self-hosted Slack-alternative" \
       io.k8s.display-name="Mattermost 3.6.2" \
       io.openshift.expose-services="8065/tcp:mattermost" \
