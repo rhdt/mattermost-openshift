@@ -1,7 +1,5 @@
 Set of configurations to run Mattermost Team on Openshift
 
-A docker image 
-
 ## Building the image
 
     make build
