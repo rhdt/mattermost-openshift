@@ -163,7 +163,7 @@ parameters:
 - name: MATTERMOST_IMAGE
   displayName: Mattermost docker image
   description: The Mattermost docker image
-  value: "registry.centos.org/jfchevrette/mattermost-team:3.6.2"
+  value: "registry.centos.org/mattermost/mattermost-team:3.6.2"
   required: true
 - name: MM_DB_HOST
   displayName: Mattermost database host
