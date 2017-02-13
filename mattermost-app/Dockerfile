@@ -1,4 +1,4 @@
-FROM registry.centos.org/centos/centos
+FROM registry.centos.org/centos/centos:7
 
 LABEL io.k8s.description="Mattermost is an open source, self-hosted Slack-alternative" \
       io.k8s.display-name="Mattermost 3.6.2" \
