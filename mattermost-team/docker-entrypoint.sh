@@ -38,6 +38,7 @@ if [[ "$1" == "mattermost" ]]; then
     MM_S3_REGION=${MM_S3_REGION:-us-east-1}
     MM_S3_ENDPOINT=${MM_S3_ENDPOINT:-s3.amazonaws.com}
 
+    updatejson ".FileSettings.DriverName" "amazons3" $MM_CONFIG
     updatejson ".FileSettings.AmazonS3AccessKeyId" "${MM_S3_ACCESS_KEY_ID}" $MM_CONFIG
     updatejson ".FileSettings.AmazonS3SecretAccessKey" "${MM_S3_SECRET_ACCESS_KEY}" $MM_CONFIG
     updatejson ".FileSettings.AmazonS3Bucket" "${MM_S3_BUCKET}" $MM_CONFIG
