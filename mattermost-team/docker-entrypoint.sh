@@ -7,7 +7,8 @@ function updatejson() {
   key=$1
   value=$2
   file=$3
-  jq "$key = \"$value\"" $file | awk 'BEGIN{RS="";getline<"-";print>ARGV[1]}' $file
+  jq "$key = \"$value\"" $file > ${file}.new
+  mv ${file}.new ${file}
   echo "Updated file $file"
   set +o nounset
 }
