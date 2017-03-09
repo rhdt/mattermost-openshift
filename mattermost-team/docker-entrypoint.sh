@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 MM_HOME=/opt/mattermost
 MM_CONFIG=${MM_HOME}/config/config.json
 MM_CONFIG_ORIG=${MM_HOME}/config.json
@@ -11,7 +10,7 @@ function updatejson() {
   file=$3
   jq "$key = \"$value\"" $file > ${file}.new
   mv ${file}.new ${file}
-  echo "Updated file $file"
+  echo "Set key $key in file $file"
   set +o nounset
 }
 
