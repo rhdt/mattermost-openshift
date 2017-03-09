@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 MM_HOME=/opt/mattermost
 MM_CONFIG=${MM_HOME}/config/config.json
 
