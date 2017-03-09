@@ -2,6 +2,7 @@
 set -x
 MM_HOME=/opt/mattermost
 MM_CONFIG=${MM_HOME}/config/config.json
+MM_CONFIG_ORIG=${MM_HOME}/config.json
 
 function updatejson() {
   set -o nounset
@@ -13,6 +14,10 @@ function updatejson() {
   echo "Updated file $file"
   set +o nounset
 }
+
+if [[ ! -f $MM_CONFIG ]]; then
+  cp -f $MM_CONFIG_ORIG $MM_CONFIG
+fi
 
 if [[ "$1" == "mattermost" ]]; then
   if [[ -z $MM_DB_HOST ]]; then echo "MM_DB_HOST not set."; exit 1; fi

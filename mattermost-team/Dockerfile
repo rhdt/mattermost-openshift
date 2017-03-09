@@ -27,9 +27,13 @@ RUN set -x && \
   curl -sLO https://releases.mattermost.com/${MATTERMOST_VERSION}/mattermost-team-${MATTERMOST_VERSION}-linux-amd64.tar.gz && \
   tar -xf mattermost-team-${MATTERMOST_VERSION}-linux-amd64.tar.gz -C /opt && \
   rm -f mattermost-team-${MATTERMOST_VERSION}-linux-amd64.tar.gz && \
+
   mkdir /opt/mattermost/data && \
+
+  cp -f /opt/mattermost/config/config.json /opt/mattermost/config.json && \
+
   chown -R 1001 /opt/mattermost && \
-  chmod 777 /opt/mattermost/config/config.json /opt/mattermost/data /opt/mattermost/logs
+  chmod 777 /opt/mattermost/data /opt/mattermost/logs
 
 COPY docker-entrypoint.sh /
 
