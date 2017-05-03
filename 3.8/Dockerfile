@@ -30,7 +30,7 @@ RUN set -x && \
 
   mkdir /opt/mattermost/data && \
 
-  cp -f /opt/mattermost/config/config.json /opt/mattermost/config.json && \
+  cp -f /opt/mattermost/config/config.json /opt/mattermost/config.json.orig && \
 
   chown -R 1001 /opt/mattermost && \
   chmod 777 /opt/mattermost/data /opt/mattermost/logs
