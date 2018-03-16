@@ -4,13 +4,13 @@ MAINTAINER Jean-Francois Chevrette <jfchevrette@gmail.com>
 
 # Labels consumed by the build service
 LABEL Component="mattermost" \
-      Name="mattermost/mattermost-team-4.7.1-centos7" \
-      Version="4.7.1" \
+      Name="mattermost/mattermost-team-4.8.0-centos7" \
+      Version="4.8.0" \
       Release="1"
 
 # Openshift/Kubernetes labels
 LABEL io.k8s.description="Mattermost is an open source, self-hosted Slack-alternative" \
-      io.k8s.display-name="Mattermost 4.7.1" \
+      io.k8s.display-name="Mattermost 4.8.0" \
       io.openshift.expose-services="8065/tcp:mattermost" \
       io.openshift.non-scalable="true" \
       io.openshift.tags="mattermost,slack" \
